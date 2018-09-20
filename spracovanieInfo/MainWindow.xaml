@@ -1,0 +1,28 @@
+﻿<Window x:Class="spracovanieInfo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:spracovanieInfo"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="82,27,0,0" TextWrapping="Wrap" Text="{Binding Path=Name}" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
+        <Label Content="Name" HorizontalAlignment="Left" Margin="20,23,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="82,58,0,0" TextWrapping="Wrap" Text="{Binding Path=Surname}" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
+        <Label Content="Surname" HorizontalAlignment="Left" Margin="20,55,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="82,89,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
+        <Label Content="Street" HorizontalAlignment="Left" Margin="20,86,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="82,123,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
+        <Label Content="City" HorizontalAlignment="Left" Margin="20,117,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="82,151,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
+        <Label Content="ZIP code" HorizontalAlignment="Left" Margin="20,147,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="236,92,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="27" TextChanged="TextBox_TextChanged"/>
+        <Label Content="No." HorizontalAlignment="Left" Margin="207,89,0,0" VerticalAlignment="Top"/>
+        <Button Click="Button_Click" Content="Add" HorizontalAlignment="Left" Margin="20,269,0,0" VerticalAlignment="Top" Width="75"/>
+        <TextBlock HorizontalAlignment="Left" Margin="310,27,0,0" TextWrapping="Wrap" Text="{Binding Path=Name}" VerticalAlignment="Top"/>
+        <StackPanel Name="stackPanel" HorizontalAlignment="Left" Height="57" Margin="181,189,0,0" VerticalAlignment="Top" Width="302"/>
+        <Button Click="Button_Click_1" Content="Remove" HorizontalAlignment="Left" Margin="127,269,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.236,-0.017"/>
+
+    </Grid>
+</Window>
