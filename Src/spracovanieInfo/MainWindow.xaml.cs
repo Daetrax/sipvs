@@ -1,6 +1,8 @@
-﻿using System;
+﻿using spracovanieInfo.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +15,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace spracovanieInfo
 {
@@ -21,6 +27,7 @@ namespace spracovanieInfo
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        private int sequenceCounter = 0;
         public string Name {
             get {
                 return name;
@@ -44,8 +51,8 @@ namespace spracovanieInfo
             }
         }
 
-        private string name = "John Doe";
-        private string surname = "Doe";
+        private string name;
+        private string surname;
         public MainWindow()
         {
             InitializeComponent();
@@ -71,9 +78,17 @@ namespace spracovanieInfo
             bookSampleBox.Name = "Book";
             bookSampleBox.Text = "Book sample";
 
+            ComboBox combo = new ComboBox();
+            combo.Items.Add("En");
+            combo.Items.Add("Sk");
+
             StackPanel container = new StackPanel();
-            container.Name = "abc123";
+            StackPanel bookElement = new StackPanel();
+
+            container.Orientation = Orientation.Horizontal;
+            container.Name = this.generateSequenceName();
             container.Children.Add(bookSampleBox);
+            container.Children.Add(combo);
             container.Children.Add(button);
             stackPanel.RegisterName(container.Name, container);
 
@@ -103,6 +118,52 @@ namespace spracovanieInfo
         {
             var length = stackPanel.Children.Count;
             stackPanel.Children.RemoveAt(length - 1);
+        }
+
+        private string generateSequenceName()
+        {
+            return $"Book{sequenceCounter++}";
+        }
+
+        private void SaveXML(object sender, RoutedEventArgs e)
+        {
+            List<Book> bookList = new List<Book>();
+            foreach (StackPanel child in stackPanel.Children)
+            {
+                var textbox = (TextBox) child.Children[0];
+                var combobox = (ComboBox)child.Children[1];
+
+                bookList.Add(new Book(textbox.Text, combobox.SelectedItem.ToString()));
+
+            }
+            Request request = new Request(NameBox.Text, SurnameBox.Text,
+                                          StreetBox.Text, Int32.Parse(StreetNumberBox.Text),
+                                          CityBox.Text, ZipcodeBox.Text,
+                                          Int32.Parse(LoanPeriodBox.Text), bookList.ToArray());
+            
+            XmlSerializer xs = new XmlSerializer(typeof(Request));
+            TextWriter tw = new StreamWriter($"{Environment.SpecialFolder.MyDocuments}/SIPVS_SerializedRequest.xml");
+            xs.Serialize(tw, request);
+            
+        }
+
+        private void ValidateXML(object sender, RoutedEventArgs e)
+        {
+
+            XmlSchemaSet schema = new XmlSchemaSet();
+            schema.Add("", @"C:\Users\Tomas\source\repos\sipvs\Xml_data\sipvt_custom.xsd");
+            XmlReader rd = XmlReader.Create($"{Environment.SpecialFolder.MyDocuments}/SIPVS_SerializedRequest.xml");
+            XDocument doc = XDocument.Load(rd);
+            doc.Validate(schema, ValidationEventHandler);
+        }
+
+        static void ValidationEventHandler(object sender, ValidationEventArgs e)
+        {
+            XmlSeverityType type = XmlSeverityType.Warning;
+            if (Enum.TryParse<XmlSeverityType>("Error", out type))
+            {
+                if (type == XmlSeverityType.Error) throw new Exception(e.Message);
+            }
         }
     }
 }
