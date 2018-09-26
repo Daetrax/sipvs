@@ -1,30 +1,37 @@
 <?xml version="1.0"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-<xs:element name="request">
-  <xs:complexType>
-      <xs:element name="name" type="xs:string"/>
-      <xs:element name="surname" type="xs:string"/>
-      <xs:element name="street" type="xs:string"/>
-	  <xs:element name="streetNumber" type="xs:integer"/>
-      <xs:element name="city" type="xs:string"/>
-	  <xs:element name="zip" type="xs:integer"/>
-	  <xs:element name="country" type="xs:string"/>
-	  <xs:element name="requestDate" type="xs:date"/>
-	  <xs:element name="loanPeriod" type="xs:integer"/>
-  </xs:complexType>
-  
-  <xs:element name="bookList">
-	<xs:complexType>
-		<xs:sequence minOccurs="1" maxOccurs="10">
-			<xs:element name="bookName" type="xs:string">
-				<xs:attribute name="lang" type="xs:string" default="EN" use="required"/>	
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
-	
-  </xs:element>
-  
-</xs:element>
+<xs:element name="Request">
+<xs:complexType>
+<xs:all>
+  <xs:element name="Name" type="xs:string"/>
+  <xs:element name="Surname" type="xs:string"/>
+  <xs:element name="Street" type="xs:string"/>
+  <xs:element name="StreetNumber" type="xs:integer"/>
+  <xs:element name="City" type="xs:string"/>
+  <xs:element name="Zip" type="xs:integer"/>
+  <xs:element name="Country" type="xs:string"/>
+  <xs:element name="RequestDate" type="xs:date"/>
+  <xs:element name="LoanPeriod" type="xs:integer"/>
+     
 
+<xs:element name="BookList">
+  <xs:complexType>
+	  <xs:sequence>
+			 <xs:element name="Book" minOccurs="0" maxOccurs="10">
+					<xs:complexType>
+						   <xs:sequence>
+								  <xs:element name="BookName" type="xs:string"></xs:element>
+							  </xs:sequence>
+						   <xs:attribute name="lang" type="xs:string"></xs:attribute>
+					   </xs:complexType>
+				</xs:element>
+		 </xs:sequence>
+  </xs:complexType>
+</xs:element>  
+
+</xs:all>
+</xs:complexType>
+</xs:element>
+  
 </xs:schema>

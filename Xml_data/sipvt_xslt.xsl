@@ -1,28 +1,27 @@
- <?xml version="1.0"?>
-
-<xsl:stylesheet version="1.0"
-xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<?xml version="1.0" encoding="utf-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:output method="html" indent="yes"/>
 
 <xsl:template match="/">
   <html>
   <body>
     <h2>Book loan request form</h2>
 
-    <div>Name <xsl:value-of select="name"/><div>
-    <div>Surname <xsl:value-of select="surname"/><div>
-    <div>Street <xsl:value-of select="street"/> No. <xsl:value-of select="streetNumber"/><div>
-    <div>City <xsl:value-of select="city"/> Zip <xsl:value-of select="zip"/><div>
-    <div>Country <xsl:value-of select="country"/><div>
-    <div>Request Date <xsl:value-of select="requestDate"/><div>
-    <div>Loan Period <xsl:value-of select="loanPeriod"/><div>
+    <div>Name <xsl:value-of select="Name"/></div>
+    <div>Surname <xsl:value-of select="Surname"/></div>
+    <div>Street <xsl:value-of select="Street"/> No. <xsl:value-of select="StreetNumber"/></div>
+    <div>City <xsl:value-of select="City"/> Zip <xsl:value-of select="Cip"/></div>
+    <div>Country <xsl:value-of select="Country"/></div>
+    <div>Request Date <xsl:value-of select="RequestDate"/></div>
+    <div>Loan Period <xsl:value-of select="LoanPeriod"/></div>
 
     <table border="1">
       <tr bgcolor="#9acd32">
         <th>List of books to loan</th>
       </tr>
-      <xsl:for-each select="request/bookList">
+      <xsl:for-each select="Request/BookList">
         <tr>
-          <td><xsl:value-of select="bookName"/></td>
+          <td><xsl:value-of select="BookName"/></td>
         </tr>
       </xsl:for-each>
     </table>

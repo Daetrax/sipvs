@@ -19,6 +19,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using System.Xml.Xsl;
 
 namespace spracovanieInfo
 {
@@ -138,23 +139,53 @@ namespace spracovanieInfo
             }
             Request request = new Request(NameBox.Text, SurnameBox.Text,
                                           StreetBox.Text, Int32.Parse(StreetNumberBox.Text),
-                                          CityBox.Text, ZipcodeBox.Text,
+                                          CountryBox.Text, CityBox.Text, ZipcodeBox.Text,
                                           Int32.Parse(LoanPeriodBox.Text), bookList.ToArray());
             
             XmlSerializer xs = new XmlSerializer(typeof(Request));
-            TextWriter tw = new StreamWriter($"{Environment.SpecialFolder.MyDocuments}/SIPVS_SerializedRequest.xml");
+            TextWriter tw = new StreamWriter($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/SIPVS_SerializedRequest.xml");
             xs.Serialize(tw, request);
+            tw.Close();
+            
             
         }
 
-        private void ValidateXML(object sender, RoutedEventArgs e)
+        //private void TransformXmlToHtml(object sender, ValidationEventArgs e)
+        //{
+        //    XmlReader xsltReader = XmlReader.Create(@"C:\Users\Tomas\source\repos\sipvs\Xml_data\sipvt_custom.xsd");
+        //    XslCompiledTransform xslt = new XslCompiledTransform();
+        //    xslt.Load(xsltReader);
+
+        //    //XslCompiledTransform transform = new XslCompiledTransform();
+        //    //using (XmlReader reader = XmlReader.Create(new StringReader(xsltString)))
+        //    //{
+        //    //    transform.Load(reader);
+        //    //}
+        //    XmlDocument doc = new XmlDocument();
+        //    doc.Load("c:\\temp.xml");
+
+        //    StringWriter results = new StringWriter();
+        //    using (XmlReader reader = XmlReader.Create(new StringReader(doc.ToString())))
+        //    {
+        //        xslt.Transform(reader, null, results);
+        //    }
+
+        //    File.WriteAllText($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/sipvs.html", results.ToString());
+        //    //return results.ToString();
+            
+
+        //}
+
+        private void ValidateXml(object sender, RoutedEventArgs e)
         {
 
             XmlSchemaSet schema = new XmlSchemaSet();
             schema.Add("", @"C:\Users\Tomas\source\repos\sipvs\Xml_data\sipvt_custom.xsd");
-            XmlReader rd = XmlReader.Create($"{Environment.SpecialFolder.MyDocuments}/SIPVS_SerializedRequest.xml");
+            XmlReader rd = XmlReader.Create($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/SIPVS_SerializedRequest.xml");
             XDocument doc = XDocument.Load(rd);
             doc.Validate(schema, ValidationEventHandler);
+
+           
         }
 
         static void ValidationEventHandler(object sender, ValidationEventArgs e)
@@ -162,8 +193,47 @@ namespace spracovanieInfo
             XmlSeverityType type = XmlSeverityType.Warning;
             if (Enum.TryParse<XmlSeverityType>("Error", out type))
             {
-                if (type == XmlSeverityType.Error) throw new Exception(e.Message);
+                MessageBoxResult result = MessageBox.Show("Invalid form",
+                                         "",
+                                         MessageBoxButton.OK,
+                                         MessageBoxImage.Warning);
+
+
+                if (type == XmlSeverityType.Error) {
+
+                    //throw new Exception(e.Message);
+                }
+                
             }
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void TransformXmlToHtml(object sender, RoutedEventArgs e)
+        {
+            XmlReader xsltReader = XmlReader.Create(@"C:\Users\Tomas\source\repos\sipvs\Xml_data\sipvt_xslt.xsl");
+            XslCompiledTransform xslt = new XslCompiledTransform();
+            xslt.Load(xsltReader);
+
+            XslCompiledTransform docXsl = new XslCompiledTransform();
+            docXsl.Load(@"C:\Users\Tomas\source\repos\sipvs\Xml_data\sipvt_xslt.xsl");
+            
+            XmlDocument doc = new XmlDocument();
+            doc.Load($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/SIPVS_SerializedRequest.xml");
+
+            
+
+            StringWriter results = new StringWriter();
+            //using (XmlReader reader = XmlReader.Create(new StringReader(doc.ToString())))
+            using (XmlReader reader = XmlReader.Create($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/SIPVS_SerializedRequest.xml"))
+            {
+                docXsl.Transform(reader, null, results);
+            }
+
+            File.WriteAllText($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/sipvs.html", results.ToString());
         }
     }
 }
