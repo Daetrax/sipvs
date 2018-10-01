@@ -71,19 +71,25 @@ namespace spracovanieInfo
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Button button = new Button();
-            button.HorizontalAlignment = HorizontalAlignment.Right;
-            button.Content = "Delete";
-            button.Name = "btnClickMe";            
-            button.Click += new RoutedEventHandler(this.RemoveBook);
             TextBox bookSampleBox = new TextBox();
             bookSampleBox.Name = "Book";
-            bookSampleBox.Text = "Book sample";
-
+            bookSampleBox.Width = 100;
+            bookSampleBox.Text = "";
+            
             ComboBox combo = new ComboBox();
             combo.Items.Add("En");
             combo.Items.Add("Sk");
+            combo.SelectedIndex = 0;
+            combo.Margin = new Thickness(10, 0, 0, 0);
 
+            Button button = new Button();
+            button.HorizontalAlignment = HorizontalAlignment.Right;
+            button.Content = "Delete";
+            button.Name = "btnClickMe";        
+            button.Margin = new Thickness(10, 0, 0, 0);
+            button.Click += new RoutedEventHandler(this.RemoveBook);
+                        
+            
             StackPanel container = new StackPanel();
             StackPanel bookElement = new StackPanel();
 
@@ -92,6 +98,7 @@ namespace spracovanieInfo
             container.Children.Add(bookSampleBox);
             container.Children.Add(combo);
             container.Children.Add(button);
+            container.Margin = new Thickness(0, 0, 0, 5);
             stackPanel.RegisterName(container.Name, container);
 
             stackPanel.Children.Add(container);
@@ -138,10 +145,22 @@ namespace spracovanieInfo
                 bookList.Add(new Book(textbox.Text, combobox.SelectedItem.ToString()));
 
             }
-            Request request = new Request(NameBox.Text, SurnameBox.Text,
-                                          StreetBox.Text, Int32.Parse(StreetNumberBox.Text),
-                                          CountryBox.Text, CityBox.Text, ZipcodeBox.Text,
-                                          Int32.Parse(LoanPeriodBox.Text), bookList.ToArray());
+            Request request;
+            try
+            {
+                request = new Request(NameBox.Text, SurnameBox.Text,
+                                              StreetBox.Text, Int32.Parse(StreetNumberBox.Text),
+                                              CountryBox.Text, CityBox.Text, ZipcodeBox.Text,
+                                              Int32.Parse(LoanPeriodBox.Text), bookList.ToArray());
+            }
+            catch (Exception e)
+            {
+                MessageBoxResult result = MessageBox.Show($"Please fill all fields",
+                                         "",
+                                         MessageBoxButton.OK,
+                                         MessageBoxImage.Warning);
+                return null;
+            }
 
             return request;
         }
@@ -154,12 +173,17 @@ namespace spracovanieInfo
         private void SaveXML(object sender, RoutedEventArgs e)
         {
             var request = createRequest();
+            if (request == null)
+            {
+                return;
+            }
             
             XmlSerializer xs = new XmlSerializer(typeof(Request));
             TextWriter tw = new StreamWriter($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/SIPVS_SerializedRequest.xml");
             xs.Serialize(tw, request);
             tw.Close();
-            
+
+            ViewButton.IsEnabled = true;           
             
         }
         
@@ -184,6 +208,11 @@ namespace spracovanieInfo
 
 
             var request = createRequest();
+            if (request == null)
+            {
+                return;
+            }
+
             XDocument doc = XDocument.Parse(ConvertObjectToXml(request));
 
             ValidationButton.Background = new SolidColorBrush(Colors.Green);
