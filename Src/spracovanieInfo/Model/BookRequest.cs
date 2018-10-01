@@ -22,6 +22,7 @@ namespace spracovanieInfo
         public Book[] BookList;
 
 
+
         public Request(string name, string surname, 
                            string street, int streetNumber, 
                            string country, string city, string zipCode,

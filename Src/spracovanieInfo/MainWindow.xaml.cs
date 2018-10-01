@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -115,23 +116,23 @@ namespace spracovanieInfo
             }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            var length = stackPanel.Children.Count;
-            stackPanel.Children.RemoveAt(length - 1);
-        }
+        //private void Button_Click_1(object sender, RoutedEventArgs e)
+        //{
+        //    var length = stackPanel.Children.Count;
+        //    stackPanel.Children.RemoveAt(length - 1);
+        //}
 
         private string generateSequenceName()
         {
             return $"Book{sequenceCounter++}";
         }
 
-        private void SaveXML(object sender, RoutedEventArgs e)
+        private Request createRequest()
         {
             List<Book> bookList = new List<Book>();
             foreach (StackPanel child in stackPanel.Children)
             {
-                var textbox = (TextBox) child.Children[0];
+                var textbox = (TextBox)child.Children[0];
                 var combobox = (ComboBox)child.Children[1];
 
                 bookList.Add(new Book(textbox.Text, combobox.SelectedItem.ToString()));
@@ -141,6 +142,18 @@ namespace spracovanieInfo
                                           StreetBox.Text, Int32.Parse(StreetNumberBox.Text),
                                           CountryBox.Text, CityBox.Text, ZipcodeBox.Text,
                                           Int32.Parse(LoanPeriodBox.Text), bookList.ToArray());
+
+            return request;
+        }
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void SaveXML(object sender, RoutedEventArgs e)
+        {
+            var request = createRequest();
             
             XmlSerializer xs = new XmlSerializer(typeof(Request));
             TextWriter tw = new StreamWriter($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/SIPVS_SerializedRequest.xml");
@@ -149,51 +162,45 @@ namespace spracovanieInfo
             
             
         }
+        
+        private string ConvertObjectToXml(object objectToSerialize)
+        {
+            XmlSerializer xmlSerializer = new XmlSerializer(objectToSerialize.GetType());
+            StringWriter stringWriter = new StringWriter();
 
-        //private void TransformXmlToHtml(object sender, ValidationEventArgs e)
-        //{
-        //    XmlReader xsltReader = XmlReader.Create(@"C:\Users\Tomas\source\repos\sipvs\Xml_data\sipvt_custom.xsd");
-        //    XslCompiledTransform xslt = new XslCompiledTransform();
-        //    xslt.Load(xsltReader);
+            xmlSerializer.Serialize(stringWriter, objectToSerialize);
 
-        //    //XslCompiledTransform transform = new XslCompiledTransform();
-        //    //using (XmlReader reader = XmlReader.Create(new StringReader(xsltString)))
-        //    //{
-        //    //    transform.Load(reader);
-        //    //}
-        //    XmlDocument doc = new XmlDocument();
-        //    doc.Load("c:\\temp.xml");
-
-        //    StringWriter results = new StringWriter();
-        //    using (XmlReader reader = XmlReader.Create(new StringReader(doc.ToString())))
-        //    {
-        //        xslt.Transform(reader, null, results);
-        //    }
-
-        //    File.WriteAllText($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/sipvs.html", results.ToString());
-        //    //return results.ToString();
-            
-
-        //}
+            return stringWriter.ToString();
+        }
+        
 
         private void ValidateXml(object sender, RoutedEventArgs e)
         {
 
             XmlSchemaSet schema = new XmlSchemaSet();
             schema.Add("", @"C:\Users\Tomas\source\repos\sipvs\Xml_data\sipvt_custom.xsd");
-            XmlReader rd = XmlReader.Create($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/SIPVS_SerializedRequest.xml");
-            XDocument doc = XDocument.Load(rd);
+            //XmlReader rd = XmlReader.Create($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/SIPVS_SerializedRequest.xml");
+            //XDocument doc = XDocument.Load(rd);
+
+
+            var request = createRequest();
+            XDocument doc = XDocument.Parse(ConvertObjectToXml(request));
+
+            ValidationButton.Background = new SolidColorBrush(Colors.Green);
+
             doc.Validate(schema, ValidationEventHandler);
 
            
         }
 
-        static void ValidationEventHandler(object sender, ValidationEventArgs e)
+        private void ValidationEventHandler(object sender, ValidationEventArgs e)
         {
             XmlSeverityType type = XmlSeverityType.Warning;
             if (Enum.TryParse<XmlSeverityType>("Error", out type))
             {
-                MessageBoxResult result = MessageBox.Show("Invalid form",
+
+                ValidationButton.Background = new SolidColorBrush(Colors.Red);
+                MessageBoxResult result = MessageBox.Show($"Invalid form {e.Message}",
                                          "",
                                          MessageBoxButton.OK,
                                          MessageBoxImage.Warning);
@@ -234,6 +241,8 @@ namespace spracovanieInfo
             }
 
             File.WriteAllText($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/sipvs.html", results.ToString());
+            FormWindow formWindow = new FormWindow(results.ToString());
+            formWindow.Show();
         }
     }
 }

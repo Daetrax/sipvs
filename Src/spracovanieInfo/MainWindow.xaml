@@ -20,7 +20,7 @@
 
         <TextBox Name="StreetBox" HorizontalAlignment="Left" Height="23" Margin="99,147,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
         <Label Content="Street" HorizontalAlignment="Left" Margin="20,147,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="StreetNumberBox" HorizontalAlignment="Left" Height="23" Margin="253,147,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="27" TextChanged="TextBox_TextChanged"/>
+        <TextBox Name="StreetNumberBox" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" Height="23" Margin="253,147,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="27" TextChanged="TextBox_TextChanged"/>
         <Label Content="No." HorizontalAlignment="Left" Margin="224,144,0,0" VerticalAlignment="Top"/>
 
         <TextBox Name="ZipcodeBox" HorizontalAlignment="Left" Height="23" Margin="99,177,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
@@ -29,10 +29,10 @@
         <StackPanel Background="AliceBlue" Name="stackPanel" HorizontalAlignment="Left" Height="262" Margin="310,55,0,0" VerticalAlignment="Top" Width="302"/>
         
         <Label Content="Loan period" HorizontalAlignment="Left" Margin="20,208,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="LoanPeriodBox" HorizontalAlignment="Left" Height="23" Margin="99,208,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox Name="LoanPeriodBox" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" Height="23" Margin="99,208,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
 
         <Button Click="SaveXML" Content="Save XML" HorizontalAlignment="Left" Margin="10,271,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button Click="ValidateXml" Content="Validate" HorizontalAlignment="Left" Margin="99,271,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Click="ValidateXml" Content="Validate" Name="ValidationButton" HorizontalAlignment="Left" Margin="99,271,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Click="TransformXmlToHtml" Content="View" HorizontalAlignment="Left" Margin="188,271,0,0" VerticalAlignment="Top" Width="75"/>
 
 
