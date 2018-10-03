@@ -202,7 +202,7 @@ namespace spracovanieInfo
         {
 
             XmlSchemaSet schema = new XmlSchemaSet();
-            schema.Add("", @"C:\Users\Tomas\source\repos\sipvs\Xml_data\sipvt_custom.xsd");
+            schema.Add("", @"../../../../Xml_data/sipvt_custom.xsd");
             //XmlReader rd = XmlReader.Create($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/SIPVS_SerializedRequest.xml");
             //XDocument doc = XDocument.Load(rd);
 
@@ -250,12 +250,12 @@ namespace spracovanieInfo
 
         private void TransformXmlToHtml(object sender, RoutedEventArgs e)
         {
-            XmlReader xsltReader = XmlReader.Create(@"C:\Users\Tomas\source\repos\sipvs\Xml_data\sipvt_xslt.xsl");
+            XmlReader xsltReader = XmlReader.Create(@"../../../../Xml_data/sipvt_xslt.xsl");
             XslCompiledTransform xslt = new XslCompiledTransform();
             xslt.Load(xsltReader);
 
             XslCompiledTransform docXsl = new XslCompiledTransform();
-            docXsl.Load(@"C:\Users\Tomas\source\repos\sipvs\Xml_data\sipvt_xslt.xsl");
+            docXsl.Load(@"../../../../Xml_data\sipvt_xslt.xsl");
             
             XmlDocument doc = new XmlDocument();
             doc.Load($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/SIPVS_SerializedRequest.xml");
