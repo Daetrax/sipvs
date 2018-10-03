@@ -10,8 +10,9 @@
     <div>Name:  <xsl:value-of select="Name"/></div>
     <div>Surname:  <xsl:value-of select="Surname"/></div>
 	<div>Country:  <xsl:value-of select="Country"/></div>
-	<div>City:  <xsl:value-of select="City"/> Zip <xsl:value-of select="Cip"/></div>
-    <div>Street:  <xsl:value-of select="Street"/> No. <xsl:value-of select="StreetNumber"/></div> 
+	<div>City:  <xsl:value-of select="City"/> </div>
+    <div>Street:  <xsl:value-of select="Street"/>  <xsl:value-of select="StreetNumber"/></div> 
+	<div>Zip: <xsl:value-of select="Zip"/></div>
     <div>Request Date:  <xsl:value-of select="RequestDate"/></div>
     <div>Loan Period:  <xsl:value-of select="LoanPeriod"/></div>
 	</div>	
