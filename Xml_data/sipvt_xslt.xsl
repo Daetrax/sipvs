@@ -6,17 +6,17 @@
   <html>
   <body>
     <h2>Book loan request form</h2>
-	
-    <div>Name <xsl:value-of select="Name"/></div>
-    <div>Surname <xsl:value-of select="Surname"/></div>
-    <div>Street <xsl:value-of select="Street"/> No. <xsl:value-of select="StreetNumber"/></div>
-    <div>City <xsl:value-of select="City"/> Zip <xsl:value-of select="Cip"/></div>
-    <div>Country <xsl:value-of select="Country"/></div>
-    <div>Request Date <xsl:value-of select="RequestDate"/></div>
-    <div>Loan Period <xsl:value-of select="LoanPeriod"/></div>
-		
-    <table border="1">
-      <tr bgcolor="#9acd32">
+	<div style="float:left;">
+    <div>Name:  <xsl:value-of select="Name"/></div>
+    <div>Surname:  <xsl:value-of select="Surname"/></div>
+	<div>Country:  <xsl:value-of select="Country"/></div>
+	<div>City:  <xsl:value-of select="City"/> Zip <xsl:value-of select="Cip"/></div>
+    <div>Street:  <xsl:value-of select="Street"/> No. <xsl:value-of select="StreetNumber"/></div> 
+    <div>Request Date:  <xsl:value-of select="RequestDate"/></div>
+    <div>Loan Period:  <xsl:value-of select="LoanPeriod"/></div>
+	</div>	
+    <table style="float:left;" border="1">
+      <tr bgcolor="#F0F8FF">
         <th>List of books to loan</th>
       </tr>
      <xsl:for-each select="BookList/Book">

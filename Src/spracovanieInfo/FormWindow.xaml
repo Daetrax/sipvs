@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:spracovanieInfo"
         mc:Ignorable="d"
-        Title="FormWindow" Height="300" Width="300">
+        Title="FormWindow" Height="400" Width="400">
     <Grid>
-        <WebBrowser Height="269" HorizontalAlignment="Left" Name="embeddedBrowser" VerticalAlignment="Top" Width="292" />
+        <WebBrowser Height="369" HorizontalAlignment="Left" Name="embeddedBrowser" VerticalAlignment="Top" Width="392" />
     </Grid>
 </Window>
