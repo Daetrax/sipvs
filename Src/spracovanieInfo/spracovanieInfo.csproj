@@ -34,6 +34,34 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ditec.Zep.DSigXades, Version=4.0.0.6, Culture=neutral, PublicKeyToken=7b8b3564548fe47e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Ditec\DSigner .NET\Ditec.Zep.DSigXades.dll</HintPath>
+    </Reference>
+    <Reference Include="Ditec.Zep.DSigXades.Core, Version=4.0.0.2, Culture=neutral, PublicKeyToken=7b8b3564548fe47e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Ditec\DSigner .NET\Ditec.Zep.DSigXades.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Ditec.Zep.DSigXades.IPlugin, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7b8b3564548fe47e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Ditec\DSigner .NET\Ditec.Zep.DSigXades.IPlugin.dll</HintPath>
+    </Reference>
+    <Reference Include="Ditec.Zep.DSigXades.PdfPlugin, Version=4.0.0.3, Culture=neutral, PublicKeyToken=7b8b3564548fe47e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Ditec\DSigner .NET\Ditec.Zep.DSigXades.PdfPlugin.dll</HintPath>
+    </Reference>
+    <Reference Include="Ditec.Zep.DSigXades.PngPlugin, Version=4.0.0.2, Culture=neutral, PublicKeyToken=7b8b3564548fe47e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Ditec\DSigner .NET\Ditec.Zep.DSigXades.PngPlugin.dll</HintPath>
+    </Reference>
+    <Reference Include="Ditec.Zep.DSigXades.TxtPlugin, Version=4.0.0.2, Culture=neutral, PublicKeyToken=7b8b3564548fe47e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Ditec\DSigner .NET\Ditec.Zep.DSigXades.TxtPlugin.dll</HintPath>
+    </Reference>
+    <Reference Include="Ditec.Zep.DSigXades.XmlPlugin, Version=4.0.0.7, Culture=neutral, PublicKeyToken=7b8b3564548fe47e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Ditec\DSigner .NET\Ditec.Zep.DSigXades.XmlPlugin.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -102,6 +130,71 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Ditec_Zep_DSigXadesAtl">
+      <Guid>{210BE412-8046-4C29-A233-11B0E8BC0EE1}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Ditec_Zep_DSigXades_PdfPluginAtl">
+      <Guid>{7F2D15CB-8025-4CC7-979B-C5AB7F0D6E6F}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Ditec_Zep_DSigXades_PngPluginAtl">
+      <Guid>{0BD5C4BC-FBC6-4669-8CF1-872BEB0F50AA}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Ditec_Zep_DSigXades_TxtPluginAtl">
+      <Guid>{8C1C6663-16CF-4038-9DF2-33EE44156BE5}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Ditec_Zep_DSigXades_XmlPluginAtl">
+      <Guid>{51E9B731-329F-4ECD-B9CE-7CF692C189A3}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="DSigXadesFbLib">
+      <Guid>{278297A4-484B-58C5-B3D7-C34BBAC93DA0}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="XmlDataContainerFBLib">
+      <Guid>{689BC1DA-04AD-4BBD-AE1C-645DA9DFDCA7}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

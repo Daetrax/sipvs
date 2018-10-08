@@ -21,6 +21,9 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
+using Ditec.Zep.DSigXades;
+using Ditec.Zep.DSigXades.Plugins;
+
 
 namespace spracovanieInfo
 {
@@ -103,6 +106,8 @@ namespace spracovanieInfo
 
             stackPanel.Children.Add(container);
             Console.WriteLine(Name);
+
+            
         }
 
         private void RemoveBook(object sender, RoutedEventArgs e)
@@ -272,6 +277,30 @@ namespace spracovanieInfo
             File.WriteAllText($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/sipvs.html", results.ToString());
             FormWindow formWindow = new FormWindow(results.ToString());
             formWindow.Show();
+        }
+
+        private void SignDocument(object sender, RoutedEventArgs e)
+        {
+            XmlSchemaSet schema = new XmlSchemaSet();
+            schema.Add("", @"../../../../Xml_data/sipvt_custom.xsd");
+
+            var request = createRequest();
+            if (request == null)
+            {
+                return;
+            }
+
+            XDocument doc = XDocument.Parse(ConvertObjectToXml(request));
+
+            XmlReader xsltReader = XmlReader.Create(@"../../../../Xml_data/sipvt_xslt.xsl");
+            XslCompiledTransform xslt = new XslCompiledTransform();
+            xslt.Load(xsltReader);
+
+            XadesSig signer = new XadesSig();
+            XmlPlugin xmlPlugin = new XmlPlugin();
+            xmlPlugin.CreateObject("1", "Objednanie knih", doc.ToString(), schema.ToString(), null, null, xslt.ToString(), null);
+
+            signer.Sign("signatureId10", "sha256", "urn:oid:1.3.158.36061701.1.2.2");
         }
     }
 }

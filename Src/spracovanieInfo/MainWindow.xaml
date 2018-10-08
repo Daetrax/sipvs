@@ -27,7 +27,7 @@
         <Label Content="ZIP code" HorizontalAlignment="Left" Margin="20,177,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.394,0.417"/>
         
         <Label Content="Loan period" HorizontalAlignment="Left" Margin="20,208,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="LoanPeriodBox" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" Height="23" Margin="99,208,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox Name="LoanPeriodBox" ToolTip="Number of days" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" Height="23" Margin="99,208,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
 
         <Button Click="Button_Click" Content="Add book" HorizontalAlignment="Left" Margin="310,27,0,0" VerticalAlignment="Top" Width="75"/>
         <StackPanel Background="AliceBlue" Name="stackPanel" HorizontalAlignment="Left" Height="262" Margin="310,55,0,0" VerticalAlignment="Top" Width="302"/>
@@ -35,6 +35,7 @@
         <Button Click="SaveXML" Content="Save to XML" HorizontalAlignment="Left" Margin="10,271,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Click="ValidateXml" Content="Validate" Name="ValidationButton" HorizontalAlignment="Left" Margin="99,271,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Click="TransformXmlToHtml" Content="View" Name="ViewButton" ToolTip="Save to XML then view" IsEnabled="False" HorizontalAlignment="Left" Margin="188,271,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Sign" Click="SignDocument" HorizontalAlignment="Left" Margin="10,310,0,0" VerticalAlignment="Top" Width="75"/>
 
 
     </Grid>
