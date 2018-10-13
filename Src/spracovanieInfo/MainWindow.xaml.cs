@@ -182,7 +182,9 @@ namespace spracovanieInfo
             {
                 return;
             }
-            
+
+            //XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            //ns.Add("", "https://github.com/Daetrax/sipvs/blob/master/Xml_data/");
             XmlSerializer xs = new XmlSerializer(typeof(Request));
             TextWriter tw = new StreamWriter($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/SIPVS_SerializedRequest.xml");
             xs.Serialize(tw, request);
@@ -197,7 +199,9 @@ namespace spracovanieInfo
             XmlSerializer xmlSerializer = new XmlSerializer(objectToSerialize.GetType());
             StringWriter stringWriter = new StringWriter();
 
-            xmlSerializer.Serialize(stringWriter, objectToSerialize);
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", "https://github.com/Daetrax/sipvs/blob/master/Xml_data/");
+            xmlSerializer.Serialize(stringWriter, objectToSerialize, ns);
 
             return stringWriter.ToString();
         }
@@ -207,7 +211,7 @@ namespace spracovanieInfo
         {
 
             XmlSchemaSet schema = new XmlSchemaSet();
-            schema.Add("", @"../../../../Xml_data/sipvt_custom.xsd");
+            schema.Add("https://github.com/Daetrax/sipvs/blob/master/Xml_data/", @"../../../../Xml_data/sipvt_custom.xsd");
             //XmlReader rd = XmlReader.Create($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/SIPVS_SerializedRequest.xml");
             //XDocument doc = XDocument.Load(rd);
 
@@ -281,8 +285,12 @@ namespace spracovanieInfo
 
         private void SignDocument(object sender, RoutedEventArgs e)
         {
-            XmlSchemaSet schema = new XmlSchemaSet();
-            schema.Add("", @"../../../../Xml_data/sipvt_custom.xsd");
+            var xsdUri = @"https://github.com/Daetrax/sipvs/blob/master/Xml_data/sipvt_custom.xsd";
+            var xsdNSUri = @"https://github.com/Daetrax/sipvs/blob/master/Xml_data/";
+            var xslUri = @"https://github.com/Daetrax/sipvs/blob/master/Xml_data/sipvt_xslt.xsl";
+                        
+            string schemaString = File.ReadAllText(@"../../../../Xml_data/sipvt_custom.xsd");
+            string transformString = File.ReadAllText(@"../../../../Xml_data/sipvt_xslt.xsl");
 
             var request = createRequest();
             if (request == null)
@@ -291,16 +299,33 @@ namespace spracovanieInfo
             }
 
             XDocument doc = XDocument.Parse(ConvertObjectToXml(request));
-
-            XmlReader xsltReader = XmlReader.Create(@"../../../../Xml_data/sipvt_xslt.xsl");
-            XslCompiledTransform xslt = new XslCompiledTransform();
-            xslt.Load(xsltReader);
-
+            
             XadesSig signer = new XadesSig();
+            
             XmlPlugin xmlPlugin = new XmlPlugin();
-            xmlPlugin.CreateObject("1", "Objednanie knih", doc.ToString(), schema.ToString(), null, null, xslt.ToString(), null);
 
-            signer.Sign("signatureId10", "sha256", "urn:oid:1.3.158.36061701.1.2.2");
+                        
+            var objectToSign = xmlPlugin.CreateObject("objectId", "Objednanie knih", doc.ToString(), schemaString, xsdNSUri, xsdUri, transformString, xslUri);
+
+            signer.AddObject(objectToSign);
+                        
+
+            var res = signer.Sign("signatureId10", "sha256", "urn:oid:1.3.158.36061701.1.2.2");
+
+            if (res == 0)
+            {
+                Console.WriteLine(signer.SignedXmlWithEnvelope);
+                File.WriteAllText($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/signedDocument.xml", signer.SignedXmlWithEnvelope);
+            }
+            else
+            {
+                Console.WriteLine(signer.ErrorMessage);
+                MessageBoxResult result = MessageBox.Show($"Error occurred during signing {Environment.NewLine}{signer.ErrorMessage}",
+                                         "",
+                                         MessageBoxButton.OK,
+                                         MessageBoxImage.Warning);
+            }
+
         }
     }
 }

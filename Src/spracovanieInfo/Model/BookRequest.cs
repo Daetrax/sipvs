@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace spracovanieInfo
 {
+    [XmlRoot(Namespace = "https://github.com/Daetrax/sipvs/blob/master/Xml_data/")]
     public class Request
     {
         public string Name;
