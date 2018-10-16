@@ -34,7 +34,7 @@
                 
         <Button Click="SaveXML" Content="Save to XML" HorizontalAlignment="Left" Margin="10,271,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Click="ValidateXml" Content="Validate" Name="ValidationButton" HorizontalAlignment="Left" Margin="99,271,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button Click="TransformXmlToHtml" Content="View" Name="ViewButton" ToolTip="Save to XML then view" IsEnabled="False" HorizontalAlignment="Left" Margin="188,271,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Click="TransformXmlToHtml" Content="View" Name="ViewButton" ToolTip="Save to XML then view" IsEnabled="True" HorizontalAlignment="Left" Margin="188,271,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Content="Sign" Click="SignDocument" HorizontalAlignment="Left" Margin="10,310,0,0" VerticalAlignment="Top" Width="75"/>
 
 

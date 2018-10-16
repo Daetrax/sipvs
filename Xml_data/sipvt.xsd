@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="https://github.com/Daetrax/sipvs/blob/master/Xml_data/" xmlns="https://github.com/Daetrax/sipvs/blob/master/Xml_data/">
+<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="https://github.com/Daetrax/sipvs/blob/master/Xml_data/sipvt" xmlns="https://github.com/Daetrax/sipvs/blob/master/Xml_data/sipvt">
 
 <xs:element name="Request">
 <xs:complexType>

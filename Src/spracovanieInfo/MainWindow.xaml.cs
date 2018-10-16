@@ -211,7 +211,7 @@ namespace spracovanieInfo
         {
 
             XmlSchemaSet schema = new XmlSchemaSet();
-            schema.Add("https://github.com/Daetrax/sipvs/blob/master/Xml_data/", @"../../../../Xml_data/sipvt_custom.xsd");
+            schema.Add("https://github.com/Daetrax/sipvs/blob/master/Xml_data/sipvt", @"../../../../Xml_data/sipvt.xsd");
             //XmlReader rd = XmlReader.Create($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/SIPVS_SerializedRequest.xml");
             //XDocument doc = XDocument.Load(rd);
 
@@ -259,12 +259,12 @@ namespace spracovanieInfo
 
         private void TransformXmlToHtml(object sender, RoutedEventArgs e)
         {
-            XmlReader xsltReader = XmlReader.Create(@"../../../../Xml_data/sipvt_xslt.xsl");
+            XmlReader xsltReader = XmlReader.Create(@"../../../../Xml_data/sipvt.xsl");
             XslCompiledTransform xslt = new XslCompiledTransform();
             xslt.Load(xsltReader);
 
             XslCompiledTransform docXsl = new XslCompiledTransform();
-            docXsl.Load(@"../../../../Xml_data\sipvt_xslt.xsl");
+            docXsl.Load(@"../../../../Xml_data\sipvt.xsl");
             
             XmlDocument doc = new XmlDocument();
             doc.Load($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/SIPVS_SerializedRequest.xml");
@@ -285,12 +285,13 @@ namespace spracovanieInfo
 
         private void SignDocument(object sender, RoutedEventArgs e)
         {
-            var xsdUri = @"https://github.com/Daetrax/sipvs/blob/master/Xml_data/sipvt_custom.xsd";
-            var xsdNSUri = @"https://github.com/Daetrax/sipvs/blob/master/Xml_data/";
-            var xslUri = @"https://github.com/Daetrax/sipvs/blob/master/Xml_data/sipvt_xslt.xsl";
+            var xsdUri = @"https://github.com/Daetrax/sipvs/blob/master/Xml_data/sipvt.xsd";
+            var xsdNSUri = @"https://github.com/Daetrax/sipvs/blob/master/Xml_data/sipvt";
+            var xslUri = @"https://github.com/Daetrax/sipvs/blob/master/Xml_data/sipvt.xsl";
                         
-            string schemaString = File.ReadAllText(@"../../../../Xml_data/sipvt_custom.xsd");
-            string transformString = File.ReadAllText(@"../../../../Xml_data/sipvt_xslt.xsl");
+            string schemaString = File.ReadAllText(@"../../../../Xml_data/sipvt.xsd");
+            string transformString = File.ReadAllText(@"../../../../Xml_data/sipvt.xsl");
+            //string xmlString = File.ReadAllText($"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/SIPVS_SerializedRequest.xml");
 
             var request = createRequest();
             if (request == null)
@@ -299,13 +300,13 @@ namespace spracovanieInfo
             }
 
             XDocument doc = XDocument.Parse(ConvertObjectToXml(request));
-            
+
             XadesSig signer = new XadesSig();
             
             XmlPlugin xmlPlugin = new XmlPlugin();
 
                         
-            var objectToSign = xmlPlugin.CreateObject("objectId", "Objednanie knih", doc.ToString(), schemaString, xsdNSUri, xsdUri, transformString, xslUri);
+            var objectToSign = xmlPlugin.CreateObject2("objectId", "Objednanie knih", doc.ToString(), schemaString, xsdNSUri, xsdUri, transformString, xslUri, "HTML");
 
             signer.AddObject(objectToSign);
                         

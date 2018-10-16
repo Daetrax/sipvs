@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 
 namespace spracovanieInfo
 {
-    [XmlRoot(Namespace = "https://github.com/Daetrax/sipvs/blob/master/Xml_data/")]
+    [XmlRoot(Namespace = "https://github.com/Daetrax/sipvs/blob/master/Xml_data/sipvt")]
     public class Request
     {
         public string Name;
