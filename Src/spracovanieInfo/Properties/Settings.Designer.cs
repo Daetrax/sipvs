@@ -26,5 +26,28 @@ namespace spracovanieInfo.Properties
                 return defaultInstance;
             }
         }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:12057/TS.asmx")]
+        public string spracovanieInfo_TSReference_TS
+        {
+            get
+            {
+                return ((string)(this["spracovanieInfo_TSReference_TS"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://test.ditec.sk/timestampws/TS.aspx")]
+        public string AspxReference
+        {
+            get
+            {
+                return ((string)(this["AspxReference"]));
+            }
+        }
     }
 }
