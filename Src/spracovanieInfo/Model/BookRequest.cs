@@ -23,30 +23,27 @@ namespace spracovanieInfo
 
         public Book[] BookList;
 
-
-
-        public Request(string name, string surname, 
-                           string street, int streetNumber, 
-                           string country, string city, string zipCode,
-                           int loanPeriod, Book[] booksList)
+        
+        public Request(MainWindow form, List<Book> bookList)
         {
-            this.Name = name;
-            this.Surname = surname;
-            this.Street = street;
-            this.StreetNumber = streetNumber;
-            this.Country = country;
-            this.City = city;
-            this.Zip = zipCode;
-            this.LoanPeriod = loanPeriod;
-            this.BookList = booksList;
-
-            this.RequestDate = DateTime.Now.ToString("yyyy-MM-dd");
-            
+            // extract info from main window            
+            this.Name = form.NameBox.Text;
+            this.Surname = form.SurnameBox.Text;
+            this.Street = form.StreetBox.Text;
+            this.StreetNumber = Int32.Parse(form.StreetNumberBox.Text);
+            this.Country = form.CountryBox.Text;
+            this.City = form.CityBox.Text;
+            this.Zip = form.ZipcodeBox.Text;
+            this.LoanPeriod = Int32.Parse(form.LoanPeriodBox.Text);
+            this.BookList = bookList.ToArray();
+            // neccessary for timestamp
+            this.RequestDate = DateTime.Now.ToString("yyyy-MM-dd");            
         }
 
         public Request()
         {
 
         }
+
     }
 }

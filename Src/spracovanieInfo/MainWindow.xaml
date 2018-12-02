@@ -7,23 +7,23 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="476.435" Width="722.349">
     <Grid>
-        <TextBox Name="NameBox" HorizontalAlignment="Left" Height="23" Margin="99,24,0,0" TextWrapping="Wrap" Text="{Binding Path=Name}" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
+        <TextBox Name="NameBox" HorizontalAlignment="Left" Height="23" Margin="99,24,0,0" TextWrapping="Wrap" Text="{Binding Path=Name}" VerticalAlignment="Top" Width="120" />
         <Label Content="Name" HorizontalAlignment="Left" Margin="20,23,0,0" VerticalAlignment="Top"/>
         
         <Label Content="Surname" HorizontalAlignment="Left" Margin="20,55,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="SurnameBox" HorizontalAlignment="Left" Height="23" Margin="99,55,0,0" TextWrapping="Wrap" Text="{Binding Path=Surname}" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
+        <TextBox Name="SurnameBox" HorizontalAlignment="Left" Height="23" Margin="99,55,0,0" TextWrapping="Wrap" Text="{Binding Path=Surname}" VerticalAlignment="Top" Width="120" />
         <Label Content="Country" HorizontalAlignment="Left" Margin="20,81,0,0" VerticalAlignment="Top"/>
         <TextBox Name="CountryBox" HorizontalAlignment="Left" Height="23" Margin="99,83,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         
-        <TextBox Name="CityBox" HorizontalAlignment="Left" Height="23" Margin="99,115,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
+        <TextBox Name="CityBox" HorizontalAlignment="Left" Height="23" Margin="99,115,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" />
         <Label Content="City" HorizontalAlignment="Left" Margin="20,117,0,0" VerticalAlignment="Top"/>
 
-        <TextBox Name="StreetBox" HorizontalAlignment="Left" Height="23" Margin="99,147,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
+        <TextBox Name="StreetBox" HorizontalAlignment="Left" Height="23" Margin="99,147,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" />
         <Label Content="Street" HorizontalAlignment="Left" Margin="20,147,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="StreetNumberBox" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" Height="23" Margin="253,147,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="27" TextChanged="TextBox_TextChanged"/>
+        <TextBox Name="StreetNumberBox" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" Height="23" Margin="253,147,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="27" />
         <Label Content="No." HorizontalAlignment="Left" Margin="224,144,0,0" VerticalAlignment="Top"/>
 
-        <TextBox Name="ZipcodeBox" HorizontalAlignment="Left" Height="23" Margin="99,177,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
+        <TextBox Name="ZipcodeBox" HorizontalAlignment="Left" Height="23" Margin="99,177,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" />
         <Label Content="ZIP code" HorizontalAlignment="Left" Margin="20,177,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.394,0.417"/>
         
         <Label Content="Loan period" HorizontalAlignment="Left" Margin="20,208,0,0" VerticalAlignment="Top"/>

@@ -98,8 +98,12 @@
     </Compile>
     <Compile Include="Model\Book.cs" />
     <Compile Include="Model\BookRequest.cs" />
+    <Compile Include="Signer.cs" />
     <Compile Include="soapController.cs" />
+    <Compile Include="UiBuilder.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="ViewModel.cs" />
+    <Compile Include="XmlUtil.cs" />
     <Page Include="FormWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
