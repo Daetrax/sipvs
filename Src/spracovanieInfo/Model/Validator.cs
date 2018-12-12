@@ -13,6 +13,12 @@ using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using System.Xml.Linq;
+using Org.BouncyCastle.Tsp;
+using Org.BouncyCastle.Cms;
+using System.Windows;
+using System.Net;
+using Org.BouncyCastle.X509;
+using System.Collections;
 
 namespace spracovanieInfo.Model
 {
@@ -63,9 +69,9 @@ namespace spracovanieInfo.Model
 
         public bool validate()
         {
-            this.validateDataEnvelope();
-            this.validateXmlSignature();
-
+            // this.validateDataEnvelope();
+            // this.validateXmlSignature();
+            this.validateTimestamp();
             return true;
         }
 
@@ -385,14 +391,129 @@ namespace spracovanieInfo.Model
             return true;
         }
 
-        private bool validateTimestamp()
-        {
-            return false;
-        }
+/*
+ * 	private void verifyTimestamp(TimeStampToken token, X509CRL crl) throws SignVerificationException, XPathExpressionException {
+		// Read timestamp signature certificate
+		X509CertificateHolder signCert = getTimestampSignatureCertificate(token);
+		if (signCert == null) {
+			throw new SignVerificationException("Cannot retrieve timestamp signature certificate (Rule 26).");
+		}
 
-        private bool validateCertificate()
-        {
-            return false;
-        }
-    }
+		// Rule 26 - Validity
+		// Check current certificate validity
+		if (!signCert.isValidOn(new Date())) {
+			throw new SignVerificationException("Timestamp signature certificate is not valid now (Rule 26).");
+		}
+
+		// Check against CRL
+		X509CRLEntry entry = crl.getRevokedCertificate(signCert.getSerialNumber());
+		if (entry != null) {
+			throw new SignVerificationException("Timestamp signature certificate is revoked (Rule 26).");
+		}
+
+		// Rule 27 - Message imprint
+		byte[] timestampDigest = token.getTimeStampInfo().getMessageImprintDigest();
+		String hashAlgorithm = token.getTimeStampInfo().getHashAlgorithm().getAlgorithm().getId();
+
+		Element signature = querySelector("//ds:Signature/ds:SignatureValue", "Cannot find element 'ds:SignatureValue' (Rule 27).");
+		byte[] signatureValue = Base64.decode(signature.getTextContent().getBytes());
+
+		MessageDigest messageDigest = null;
+		try {
+			messageDigest = MessageDigest.getInstance(hashAlgorithm, "BC");
+		} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+			throw new SignVerificationException("Unsupported digest type (Rule 27).");
+		}
+
+		byte[] signatureDigest = messageDigest.digest(signatureValue);
+		if (!Arrays.equals(timestampDigest, signatureDigest)) {
+			throw new SignVerificationException("Timestamp MessageImprint check failure (Rule 27).");
+		}
+}*/
+private bool validateTimestamp()
+{
+    TimeStampToken token = null;
+    X509Crl ss = null;
+    XmlNamespaceManager mn = new XmlNamespaceManager(doc.NameTable);
+    X509CrlParser xx = new X509CrlParser();
+    mn.AddNamespace("xades", "http://uri.etsi.org/01903/v1.3.2#");
+    string crlUrl = "http://test.ditec.sk/DTCCACrl/DTCCACrl.crl";
+    Org.BouncyCastle.X509.X509Certificate signerCert = null;
+
+            try
+            {
+                var timestamp = this.doc.SelectSingleNode($"//xades:EncapsulatedTimeStamp", mn);
+                
+                var webClient = new WebClient();
+                byte[] crlBytes = webClient.DownloadData(crlUrl);
+                
+                token = new TimeStampToken(new CmsSignedData(Convert.FromBase64String(timestamp.InnerText)));
+                
+                ss = xx.ReadCrl(crlBytes);
+
+                if (timestamp == null || crlBytes == null || token == null || ss == null)
+                {
+                    generalException(new Exception());
+                    return false;
+                }
+
+                var store = token.GetCertificates("Collection");
+                
+                var certs = new ArrayList(store.GetMatches(null));
+
+                foreach(Org.BouncyCastle.X509.X509Certificate cert in certs)
+                {
+                    string cerIssuer = cert.IssuerDN.ToString(true, new Hashtable());
+                    string signIssuer = token.SignerID.Issuer.ToString(true, new Hashtable());
+
+                    if(cerIssuer == signIssuer && cert.SerialNumber.Equals(token.SignerID.SerialNumber))
+                    {
+                        signerCert = cert;
+                        if (signerCert == null)
+                        {
+                            generalException(new Exception());
+                            return false;
+                        }
+                        break;
+                    }
+                }
+                if (!signerCert.IsValidNow)
+                    return false;
+
+                X509CrlEntry revokeCheck = ss.GetRevokedCertificate(signerCert.SerialNumber);
+                if (revokeCheck == null)
+                {
+                    generalException(new Exception());
+                    return false;
+                }
+                
+                
+                
+                
+            }
+            catch(Exception e)
+            {
+                generalException(e);
+            }
+
+
+    return false;
+}
+
+
+private bool validateCertificate()
+{
+return false;
+}
+
+
+private bool generalException(Exception e) {
+// all fields need to be filled
+MessageBoxResult result = MessageBox.Show($"Validation has failed: {e.StackTrace}",
+                         "",
+                         MessageBoxButton.OK,
+                         MessageBoxImage.Warning);
+       return false;
+}
+}
 }
