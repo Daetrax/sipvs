@@ -77,10 +77,23 @@ namespace spracovanieInfo.Model
 
         public bool validate()
         {
-            // this.validateDataEnvelope();
-            // this.validateXmlSignature();
-            this.validateTimestamp();
-            return true;
+            if (this.validateDataEnvelope() &&
+            this.validateXmlSignature() &&
+            this.validateTimestamp())
+            {
+                MessageBoxResult result = MessageBox.Show($"Validation successfull",
+                                                    "",
+                                                    MessageBoxButton.OK,
+                                                    MessageBoxImage.Information);
+                return true;
+            } else
+            {
+                //MessageBoxResult result = MessageBox.Show($"",
+                //                                    "",
+                //                                    MessageBoxButton.OK,
+                //                                    MessageBoxImage.Warning);
+                return false;
+            }            
         }
 
 
@@ -368,7 +381,9 @@ namespace spracovanieInfo.Model
 
 
             #region signature element validation
-            var _sig = this.doc.SelectSingleNode($"//ds:Signature");
+            XmlNamespaceManager mn2 = new XmlNamespaceManager(doc.NameTable);
+            mn2.AddNamespace("ds", "http://www.w3.org/2000/09/xmldsig#");
+            var _sig = this.doc.SelectSingleNode($"//ds:Signature", mn2);
 
             if (_sig == null)
             {
@@ -400,7 +415,7 @@ namespace spracovanieInfo.Model
             #endregion
 
             #region signatureValue valid
-            var _sigVal = this.doc.SelectSingleNode($"//ds:SignatureValue");
+            var _sigVal = this.doc.SelectSingleNode($"//ds:SignatureValue", mn2);
 
             if (_sigVal == null)
             {
@@ -418,7 +433,7 @@ namespace spracovanieInfo.Model
             #endregion
 
             #region signedInfo reference
-            var SignedInfoReferences = this.doc.SelectNodes($"//ds:SignedInfo/ds:Reference");
+            var SignedInfoReferences = this.doc.SelectNodes($"//ds:SignedInfo/ds:Reference", mn2);
 
             if (SignedInfoReferences.Count == 0)
             {
