@@ -68,6 +68,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
@@ -98,6 +99,7 @@
     </Compile>
     <Compile Include="Model\Book.cs" />
     <Compile Include="Model\BookRequest.cs" />
+    <Compile Include="Model\Validator.cs" />
     <Compile Include="Signer.cs" />
     <Compile Include="soapController.cs" />
     <Compile Include="UiBuilder.cs" />

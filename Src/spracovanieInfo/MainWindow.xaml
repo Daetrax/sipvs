@@ -37,6 +37,7 @@
         <Button Click="TransformXmlToHtml" Content="View" Name="ViewButton" ToolTip="Save to XML then view" IsEnabled="True" HorizontalAlignment="Left" Margin="188,271,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Content="Sign" Click="SignDocument" HorizontalAlignment="Left" Margin="10,310,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Content="Timestamp" Click="timestampDocument" HorizontalAlignment="Left" Margin="99,310,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Validate XAdES" Click="ValidateXades" HorizontalAlignment="Left" Margin="188,310,0,0" VerticalAlignment="Top" Width="104"/>
 
 
     </Grid>

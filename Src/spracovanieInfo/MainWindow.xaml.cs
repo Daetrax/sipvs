@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Win32;
+using System.Xml;
 
 namespace spracovanieInfo
 {
@@ -48,6 +49,23 @@ namespace spracovanieInfo
         private void SignDocument(object sender, RoutedEventArgs e)
         {
             new Signer().SignDocument();
+        }
+
+        private void ValidateXades(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            openFileDialog.Filter = "xml files (*.xml)|*.xml";
+            openFileDialog.FilterIndex = 2;
+            openFileDialog.RestoreDirectory = true;
+
+            // Process open file dialog box results
+            openFileDialog.ShowDialog();
+
+            XmlDocument doc = new XmlDocument();
+            doc.Load(openFileDialog.FileName);
+            new Validator(doc).validate();
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
@@ -103,7 +121,6 @@ namespace spracovanieInfo
             openFileDialog.ShowDialog();  
             Utils.stamp(openFileDialog.FileName);           
         }
-
 
     }
 }
