@@ -13,6 +13,8 @@ using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using System.Xml.Linq;
+using System.Xml.Serialization;
+using System.Windows;
 
 namespace spracovanieInfo.Model
 {
@@ -55,6 +57,14 @@ namespace spracovanieInfo.Model
             {"SIGNATUREPROPERTIES", "http://www.w3.org/2000/09/xmldsig#SignatureProperties"}
         };
 
+        private Dictionary<string, string> referenceElements = new Dictionary<string, string>
+        {
+            {"MANIFEST", "http://www.w3.org/2000/09/xmldsig#Manifest"},
+            {"OBJECT", "http://www.w3.org/2000/09/xmldsig#Object"},
+            {"SIGNEDPROPERTIES", "http://uri.etsi.org/01903#SignedProperties"},
+            {"SIGNATUREPROPERTIES", "http://www.w3.org/2000/09/xmldsig#SignatureProperties"}
+        };
+
 
         public Validator(XmlDocument doc)
         {
@@ -69,25 +79,21 @@ namespace spracovanieInfo.Model
             return true;
         }
 
-        //private X509Certificate loadCertificate(String asn1)
-        //{
-        //    byte[] data = Convert.FromBase64String(asn1);
-        //    ByteArrayInputStream inStream = new ByteArrayInputStream(data);
-        //    Asn1InputStream derin = new ASN1InputStream(inStream);
-        //    ASN1Primitive certInfo = derin.readObject();
-        //    ASN1Sequence seq = ASN1Sequence.getInstance(certInfo);
-        //    return new X509CertificateObject(Certificate.getInstance(seq));
-        //}
 
-        //private XmlNodeList findByAttributeValue()
-        //{
-        //    IEnumerable<XElement> list1 =
-        //    from el in this.doc.Elements()
-        //    where el.Attribute("Select") != null
-        //    select el;
+        private Stream GenerateStreamFromString(string s)
+        {
+            byte[] byteArray = Encoding.UTF8.GetBytes(s);
+            MemoryStream stream = new MemoryStream(byteArray);
+            return stream;
+        }
 
-
-        //}
+        private void errorNotify(string message)
+        {
+            MessageBoxResult result = MessageBox.Show($"Validation error: {message}",
+                                                     "",
+                                                     MessageBoxButton.OK,
+                                                     MessageBoxImage.Warning);
+        }
 
         private bool validateDataEnvelope()
         {
@@ -95,33 +101,33 @@ namespace spracovanieInfo.Model
 
             if (root == null)
             {
-                //this.ERROR_SPECIFIC = "The root element xzep:DataEnvelope is missing.";
+                errorNotify("xzep:DataEnvelope is missing");
                 return false;
             }
 
             var xzepAttribute = root.Attributes.GetNamedItem("xmlns:xzep");
             if (xzepAttribute == null)
             {
-                //this.ERROR_SPECIFIC = "The root element is missing the xmlns:xzep attribute.";
+                errorNotify("root element is missing the xmlns:xzep attribute");
                 return false;
             }
 
             if (!xzepAttribute.InnerText.Equals(this.xzepNs))
             {
-                //this.ERROR_SPECIFIC = "The value of the xmlns:xzep attribute on the root element is invalid. Found: " + xzepAttribute.getTextContent();
+                errorNotify("xmlns:xzep attribute on the root element is invalid");
                 return false;
             }
 
             var dsAttribute = root.Attributes.GetNamedItem("xmlns:ds");
             if (dsAttribute == null)
             {
-                //this.ERROR_SPECIFIC = "The root element is missing the xmlns:ds attribute.";
+                errorNotify("missing the xmlns:ds attribute on root");
                 return false;
             }
 
             if (!dsAttribute.InnerText.Equals(dsNs))
             {
-                //this.ERROR_SPECIFIC = "The value of the xmlns:ds attribute on the root element is invalid. Found: " + dsAttribute.getTextContent();
+                errorNotify("xmlns:ds on the root is invalid");
                 return false;
             }
 
@@ -134,21 +140,21 @@ namespace spracovanieInfo.Model
 
             if (signatureMethod == null)
             {
-                //this.ERROR_SPECIFIC = "The ds:Signature element is missing the ds:SignatureMethod element.";
+                errorNotify("Missing ds:SignatureMethod in ds:Signature");
                 return false;
             }
 
             var algorithmAttribute = signatureMethod.Attributes.GetNamedItem("Algorithm");
             if (algorithmAttribute == null)
             {
-                //this.ERROR_SPECIFIC = "The ds:SignatureMethod element is missing the Algorithm attribute.";
+                errorNotify("ds:SignatureMethod does not contain Algorithm");
                 return false;
             }
 
             string signatureScheme = algorithmAttribute.InnerText;
             if (!validSchemes.Contains(signatureScheme))
             {
-                //this.ERROR_SPECIFIC = "The ds:SignatureMethod Algorithm is not supported. Found: " + signatureScheme;
+                errorNotify("ds:SignatureMethod Algorithm is not supported");
                 return false;
             }
 
@@ -156,20 +162,20 @@ namespace spracovanieInfo.Model
 
             if (canonicalizationMethod == null)
             {
-                //this.ERROR_SPECIFIC = "The ds:Signature element is missing the ds:CanonicalizationMethod element.";
+                errorNotify("ds:Signature element is missing the ds:CanonicalizationMethod");
                 return false;
             }
 
             algorithmAttribute = canonicalizationMethod.Attributes.GetNamedItem("Algorithm");
             if (algorithmAttribute == null)
             {
-                //this.ERROR_SPECIFIC = "The ds:CanonicalizationMethod element is missing the Algorithm attribute.";
+                errorNotify("CanonicalizationMethod does not have algorithm attribute");
                 return false;
             }
 
             if (!algorithmAttribute.InnerText.Equals("http://www.w3.org/TR/2001/REC-xml-c14n-20010315"))
             {
-                //this.ERROR_SPECIFIC = "The ds:CanonicalizationMethod Algorithm is not supported. Found: " + algorithmAttribute.getTextContent();
+                errorNotify("Canonicalization algorithm is invalid");
                 return false;
             }
 
@@ -178,7 +184,7 @@ namespace spracovanieInfo.Model
             var signedInfo = this.doc.GetElementsByTagName("ds:SignedInfo")[0];
             if (signedInfo == null)
             {
-                //this.ERROR_SPECIFIC = "The ds:SignedInfo element is missing.";
+                errorNotify("ds:SignedInfo not found");
                 return false;
             }
 
@@ -194,7 +200,7 @@ namespace spracovanieInfo.Model
                     String digestAlgorighm = digest.Attributes.GetNamedItem("Algorithm").InnerText;
                     if (!this.validAlgorithms.ContainsKey(digestAlgorighm))
                     {
-                        //this.ERROR_SPECIFIC = "A ds:DigestMethod Algorithm in a ds:SignedInfo reference is not supported. Found: " + digestAlgorighm;
+                        errorNotify("ds:DigestMethod algorithm in SignedInfo is not supported");
                         return false;
                     }
 
@@ -210,7 +216,7 @@ namespace spracovanieInfo.Model
                         String transformAlgorithm = transform.Attributes.GetNamedItem("Algorithm").InnerText;
                         if (!transformAlgorithm.Equals(canonicalization))
                         {
-                            //this.ERROR_SPECIFIC = "One of the transforms specified in a ds:SignedInfo reference is invalid. Found: " + transformAlgorithm;
+                            errorNotify("One or more transforms are invalid");
                             return false;
                         }
                     }
@@ -225,7 +231,7 @@ namespace spracovanieInfo.Model
 
             if (signedInfo == null || signatureValue == null)
             {
-                //this.ERROR_SPECIFIC = "The ds:SignedInfo or ds:SignatureValue element are missing.";
+                errorNotify("ds:SignedInfo or ds:SignatureValue are missing");
                 return false;
             }
 
@@ -246,80 +252,71 @@ namespace spracovanieInfo.Model
 
                         if (refType.Equals(this.validReferenceTypes["MANIFEST"]))
                         {
-
+                            var something = reference.Attributes.GetNamedItem("URI");
                             var manifestId = reference.Attributes.GetNamedItem("URI").InnerText.Substring(1);
-                            //var manifests = this._findNodesByAttributeValue("Id", manifestId);
-                            var something = $"/nodes/node/attribute[@Id=\"{manifestId}\"";
                             XmlNamespaceManager mn = new XmlNamespaceManager(doc.NameTable);
-                            mn.AddNamespace("xmlns:ds", "http://www.w3.org/2000/09/xmldsig#");
-                            var manifests = this.doc.SelectSingleNode($"//Manifest[@Id='{manifestId}']");
-                            var manifest = (XmlElement)manifests;
+                            mn.AddNamespace("ds", "http://www.w3.org/2000/09/xmldsig#");
+
+
+                            var manifests = this.doc.SelectNodes($"//*[@Id='{manifestId}']");
+
+                            var manifest = manifests[0];
+                            
 
                             if (manifest == null)
                             {
-                                //this.ERROR_SPECIFIC = "Element with Id " + manifestId + " not found.";
+                                errorNotify($"Element {manifestId} not found");
                                 return false;
                             }
 
-                            //var manifestContent = nodeToString(manifest); 
                             var manifestContent = manifest.ToString();
 
                             try
                             {
-
                                 XmlDsigC14NTransform transform = new XmlDsigC14NTransform();
-                                transform.LoadInput(manifest);
-                                var ms = (MemoryStream)transform.GetOutput(typeof(Stream));
-                                var canonicalizedNode = new StreamReader(ms).ReadToEnd();
+                                transform.Algorithm = SignedXml.XmlDsigC14NTransformUrl;
+                                var a = transform.InputTypes;
 
-                                //byte[] canonXmlBytes = Transform.Canonicalize(manifestContent);
-                                //String canonXmlString = new String(canonXmlBytes);
+                                var streamManifest = GenerateStreamFromString(manifest.OuterXml);
+                                transform.LoadInput(streamManifest);
+                                var ms = (MemoryStream)transform.GetOutput(typeof(Stream));
+
                                 var digestIdentifier = validAlgorithms[digestMethod];
 
                                 if (digestIdentifier == null)
                                 {
-                                    //this.ERROR_SPECIFIC = String.format("Digest method %s is not supported.", digestMethod);
+                                    errorNotify("Digest method not supported");
                                     return false;
                                 }
-                                //var digest = MessageDigest.getInstance(digestIdentifier);
-                                //byte[] digested = digest.digest(canonXmlBytes);
 
-                                var digested = SHA1Managed.Create().ComputeHash(ms);
-
+                                var digested = SHA256.Create().ComputeHash(ms);
+                                
                                 var ourDigest = Convert.ToBase64String(digested);
                                 var theirDigest = reference.GetElementsByTagName("ds:DigestValue")[0].InnerText;
 
                                 if (!ourDigest.Equals(theirDigest))
                                 {
-                                    //this.ERROR_SPECIFIC = "Digest value mismatch for reference in the ds:SignedInfo element. Ref. Id: " + ref.getAttribute("Id");
+                                    errorNotify("Digest value mismatch for references");
                                     return false;
                                 }
 
                             }
                             catch (Exception e)
                             {
-                                //e.printStackTrace();
-                                //this.ERROR_SPECIFIC = "Something went wrong...";
-                                return false;
+                                errorNotify("Unable to validate signature.");
                             }
                         }
                     }
                 }
 
+                // signature validation
                 var _cert = ((XmlElement)keyInfo).GetElementsByTagName("ds:X509Certificate")[0].InnerText;
                 try
                 {
-                    //var certBytes = Encoding.Default.GetBytes(_cert);
-                    //X509Certificate certificate = new X509Certificate(certBytes);
-                    //loadCertificate(_cert);
-
-                    //PublicKey key = certificate.getPublicKey();
-
-                    //String signedInfoContent = nodeToString(signedInfo);
-                    //String signedInfoContent = signedInfo.ToString();
 
                     XmlDsigC14NTransform transform = new XmlDsigC14NTransform();
-                    transform.LoadInput(signedInfo);
+
+                    transform.LoadInput(GenerateStreamFromString(signedInfo.OuterXml));
                     var cannonSignedInfo = (MemoryStream)transform.GetOutput(typeof(Stream));
 
                     var certBytes = Convert.FromBase64String(_cert);
@@ -328,7 +325,7 @@ namespace spracovanieInfo.Model
 
                     var algString = this.validAlgorithms[this.digMethod];
 
-                    var signature = Convert.FromBase64String(signatureValue.InnerText);
+                    var signatureBytes = Convert.FromBase64String(signatureValue.InnerText);
 
                     switch (ski.AlgorithmID.ObjectID.Id)
                     {
@@ -348,39 +345,141 @@ namespace spracovanieInfo.Model
                     ISigner verif = SignerUtilities.GetSigner(algString);
                     verif.Init(false, pk);
                     verif.BlockUpdate(cannonSignedInfo.ToArray(), 0, cannonSignedInfo.ToArray().Length);
-                    var signatureVerificationResult = verif.VerifySignature(signature);
+                    var signatureVerificationResult = verif.VerifySignature(signatureBytes);
 
                     if (!signatureVerificationResult)
                     {
-                        Console.WriteLine("Signature verification failed.");
+                        errorNotify("Signature verification failed.");
                     }
 
-                    //var canonicalizedNode = new StreamReader(ms).ReadToEnd();
-
-                    //byte[] cannonSignedInfo = canonicalize(signedInfoContent);
-
-                    //Signature signer = Signature.getInstance(certificate.getSigAlgName(), "BC");
-
-                    //signer.initVerify(certificate.getPublicKey());
-                    //signer.update(cannonSignedInfo);
-
-                    //if (!signer.verify(Base64.getDecoder().decode(signatureValue.getTextContent().getBytes())))
-                    //{
-                    //    this.ERROR_SPECIFIC = String.format("Signature verification failed. (Element: ds:SignatureValue, Certificate type: %s, Algorithm: %s).", certificate.getType(), certificate.getSigAlgName());
-                    //    return false;
-                    //}
                 }
                 catch (Exception e)
                 {
-                    //e.printStackTrace();
-                    //this.ERROR_SPECIFIC = "Something went wrong...";
-                    //return false;
+                    errorNotify("Unable to validate signature.");
                 }
             }
 
-            return true;
 
             #endregion
+
+
+            #region signature element validation
+            var _sig = this.doc.SelectSingleNode($"//ds:Signature");
+
+            if (_sig == null)
+            {
+                errorNotify("ds:Signature element is missing");
+                return false;
+            }
+            var signature = (XmlElement) _sig;
+
+            String id = signature.GetAttribute("Id");
+            if (id.Equals(""))
+            {
+                errorNotify("ds:Signature element does not have Id");
+                return false;
+            }
+
+            String ds_ns = signature.GetAttribute("xmlns:ds");
+            if (ds_ns.Equals(""))
+            {
+                errorNotify("No xmlns:ds attribute in ds:Signature");
+                return false;
+            }
+
+            if (!ds_ns.Equals(dsNs))
+            {
+                errorNotify("ds:Signature element xmlns:ds attribute value is invalid");
+                return false;
+            }
+
+            #endregion
+
+            #region signatureValue valid
+            var _sigVal = this.doc.SelectSingleNode($"//ds:SignatureValue");
+
+            if (_sigVal == null)
+            {
+                errorNotify("ds:SignatureValue element is missing");
+                return false;
+            }
+            var signatureValueElement = (XmlElement)_sigVal;
+
+            var signatureValueId = signatureValueElement.GetAttribute("Id");
+            if (id.Equals(""))
+            {
+                errorNotify("ds:SignatureValue element is does not have Id");
+                return false;
+            }
+            #endregion
+
+            #region signedInfo reference
+            var SignedInfoReferences = this.doc.SelectNodes($"//ds:SignedInfo/ds:Reference");
+
+            if (SignedInfoReferences.Count == 0)
+            {
+                errorNotify("No references in the ds:SignedInfo ");
+                return false;
+            }
+
+            for (int i = 0; i < SignedInfoReferences.Count; i++)
+            {
+                var reference = (XmlElement)SignedInfoReferences[i];
+
+                String Id = reference.GetAttribute("Id");
+                if (Id.Equals(""))
+                {
+                    errorNotify("ds:SignedInfo reference is missing the Id");
+                    return false;
+                }
+
+                String type = reference.GetAttribute("Type");
+                if (type.Equals(""))
+                {
+                    errorNotify("Reference is missing the URI attribute {Id}");
+                    return false;
+                }
+
+                String URI = reference.GetAttribute("URI");
+                if (URI.Equals(""))
+                {
+                    errorNotify($"Reference is missing the URI attribute {Id}");
+                    return false;
+                }
+                URI = URI.Substring(1);
+                var referencedElement = this.doc.SelectSingleNode($"//*[@Id='{URI}']");
+
+                if (referencedElement == null)
+                {
+                    errorNotify($"Reference {URI} in ds:SignedInfo not found");
+                    return false;
+                }
+                var name = referencedElement.Name;
+                String requiredType = null;
+                switch (name)
+                {
+                    case ("xades:SignedProperties"):
+                        requiredType = referenceElements["SIGNEDPROPERTIES"];
+                        break;
+                    case ("ds:SignatureProperties"):
+                        requiredType = referenceElements["SIGNATUREPROPERTIES"];
+                        break;
+                    case ("ds:KeyInfo"):
+                        requiredType = referenceElements["OBJECT"];
+                        break;
+                    default:
+                        requiredType = referenceElements["MANIFEST"];
+                        break;
+                }
+
+                if (!type.Equals(requiredType))
+                {
+                    errorNotify("ds:SignedInfo reference type does not match");
+                    return false;
+                }
+            }
+            #endregion
+
 
             return true;
         }
@@ -394,5 +493,7 @@ namespace spracovanieInfo.Model
         {
             return false;
         }
+   
+
     }
 }
